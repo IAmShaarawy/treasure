@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "917710704189",
+    "project_id": "treasure-f668c",
+    "storage_bucket": "treasure-f668c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:917710704189:android:241f27dcf0578d1980a454",
+        "android_client_info": {
+          "package_name": "com.example.treasure"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "917710704189-plfbfr1df4htdbbn8f4ltsgc5tjbuigr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.treasure",
+            "certificate_hash": "feb0a14683e094a97316b80558019ad26c3347c3"
+          }
+        },
+        {
+          "client_id": "917710704189-fcpal7mn2bdda666gllpcpsl8o3lk4so.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_jaFrgixdif4l9-3jbOQnq3LRXoIPgdQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "917710704189-fcpal7mn2bdda666gllpcpsl8o3lk4so.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "917710704189-1q2jtlk5ajo9ftehgdsdguiljdhsu4pr.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "vc"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
