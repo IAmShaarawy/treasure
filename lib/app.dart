@@ -1,6 +1,8 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:treasure/screens/auth.dart';
 import 'package:treasure/screens/splash.dart';
+import 'package:treasure/screens/treasure_details.dart';
 
 class App extends StatelessWidget {
   @override
@@ -19,7 +21,8 @@ class App extends StatelessWidget {
   }
 
   Future<Widget> findHome() async {
+    await Firebase.initializeApp();
     await Future.delayed(Duration(seconds: 3));
-    return Auth();
+    return TreasureDetails();
   }
 }
