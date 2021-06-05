@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:treasure/models/treasure_model.dart';
 import 'package:treasure/services/treasure_service.dart';
+import 'package:treasure/ui/loading.dart';
 
 class TreasureDetails extends StatelessWidget {
   final treasureService = TreasureService();
@@ -13,7 +14,7 @@ class TreasureDetails extends StatelessWidget {
               future: treasureService.getTreasureWithId("t1h2yQAWPFoFoARZijYb"),
               builder: (context, snapshot) {
                 if (snapshot.hasError) return Text(snapshot.error.toString());
-                if (!snapshot.hasData) return Text("Loading...");
+                if (snapshot.hasData) return Loading();
                 final treasure = snapshot.data;
                 return Column(
                   children: [
