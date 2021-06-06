@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:treasure/models/roles.dart';
+import 'package:treasure/screens/add_new_treasure.dart';
 import 'package:treasure/screens/admin_home.dart';
 import 'package:treasure/screens/auth.dart';
 import 'package:treasure/screens/splash.dart';
@@ -9,6 +10,10 @@ import 'package:treasure/services/auth_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class App extends StatelessWidget {
+  final Map<String, WidgetBuilder> routes = {
+    AddNewTreasure.ROUTE: (ctx) => AddNewTreasure(),
+  };
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,6 +21,7 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
+      routes: routes,
       home: StreamBuilder<Widget>(
         initialData: Splash(),
         stream: findHome(),
