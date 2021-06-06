@@ -24,4 +24,10 @@ class TreasureService {
     final ds = await treasureCollection.doc(id).get();
     return ds.data();
   }
+
+  Stream<TreasureModel> getTreasureWithIdStream(String id) {
+    return treasureCollection.doc(id)
+        .snapshots()
+        .map((ds) => ds.data());
+  }
 }

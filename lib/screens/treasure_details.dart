@@ -10,11 +10,11 @@ class TreasureDetails extends StatelessWidget {
 
     return Scaffold(
       body: Center(
-          child: FutureBuilder<TreasureModel>(
-              future: treasureService.getTreasureWithId("t1h2yQAWPFoFoARZijYb"),
+          child: StreamBuilder<TreasureModel>(
+              stream: treasureService.getTreasureWithIdStream("t1h2yQAWPFoFoARZijYb"),
               builder: (context, snapshot) {
                 if (snapshot.hasError) return Text(snapshot.error.toString());
-                if (snapshot.hasData) return Loading();
+                if (!snapshot.hasData) return Loading();
                 final treasure = snapshot.data;
                 return Column(
                   children: [
