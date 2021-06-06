@@ -13,7 +13,7 @@ Roles roleFromString(String role) {
 String rolesLabel(Roles role) {
   switch (role) {
     case Roles.USER:
-      return "Parent";
+      return "User";
       break;
     case Roles.ADMIN:
       return "Admin";
