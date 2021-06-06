@@ -143,7 +143,6 @@ class UserProfile extends StatelessWidget {
 
   Color _roleColor(AppUser appUser) {
     if (appUser.role == Roles.ADMIN) return Colors.red;
-
     return Colors.blue;
   }
 
