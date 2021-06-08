@@ -23,7 +23,7 @@ class TreasureService {
       int since,
       List<String> imagesPaths,) async {
     final urls = await Future.wait(
-        imagesPaths.map((imgPath) => _uploadService.uploadImage(imgPath)));
+        imagesPaths.map((imgPath) => _uploadService.uploadTreasureImage(imgPath)));
     final currentUser = await _authService.getCurrentUser();
     final doc = _treasureCollection.doc();
     final treasure = TreasureModel(
@@ -66,7 +66,7 @@ class TreasureService {
   Stream<List<TreasureModel>> _getTreasuresStream(bool isReviewed,
       Categories category) {
     Query<TreasureModel> query = _treasureCollection
-        .where("is_reviewed", isEqualTo: isReviewed)
+        .where("is_reviewed", isEqualTo: isReviewed);
     if (category != null) {
       query = query.where("category", isEqualTo: category.toString());
     }

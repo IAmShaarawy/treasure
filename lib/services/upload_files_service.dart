@@ -24,7 +24,7 @@ class UploadFileService {
     return await uploadResult.ref.getDownloadURL();
   }
 
-  Future<String> uploadImage(String filePath) async {
+  Future<String> uploadTreasureImage(String filePath) async {
     if (filePath == null) return null;
     final currentUser = await _authService.getCurrentUser();
     final imageFile = File(filePath);
