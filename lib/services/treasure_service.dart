@@ -17,11 +17,11 @@ class TreasureService {
   final _uploadService = UploadFileService();
   final _authService = AuthService();
 
-  Future<void> addNewTreasure(Category category,
+  Future<void> addNewTreasure({Category category,
       String title,
       String desc,
       int since,
-      List<String> imagesPaths,) async {
+      List<String> imagesPaths,}) async {
     final urls = await Future.wait(
         imagesPaths.map((imgPath) => _uploadService.uploadTreasureImage(imgPath)));
     final currentUser = await _authService.getCurrentUser();

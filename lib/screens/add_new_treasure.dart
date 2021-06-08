@@ -1,18 +1,337 @@
-import 'package:flutter/material.dart';
+import 'dart:io';
 
-class AddNewTreasure extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:treasure/services/treasure_service.dart';
+import 'package:treasure/ui/loading.dart';
+
+class AddNewTreasure extends StatefulWidget {
   static const ROUTE = "new_treasure_route";
+
+  @override
+  _State createState() => _State();
+}
+
+class _State extends State<AddNewTreasure> {
+  String _titleCount = "";
+  String _descCount = "";
+  final _titleController = TextEditingController();
+  final _descriptionController = TextEditingController();
+  final _sinceController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
+  String _imageFilePath1;
+  String _imageFilePath2;
+  String _imageFilePath3;
+  String _imageFilePath4;
+  bool _isLoading = false;
+  final _treasureService = TreasureService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Add new treasure"),
-        centerTitle: true,
-      ),
-      body: Center(
-        child: Text("Add new treasure"),
-      ),
+        appBar: AppBar(
+          title: Text("Add New Product"),
+          centerTitle: true,
+        ),
+        body: _isLoading
+            ? Loading()
+            : Form(
+          key: _formKey,
+          child: ListView(
+            padding: EdgeInsets.all(16),
+            children: [
+              SizedBox(height: 16),
+              _buildMediaSelector(),
+              (_imageFilePath1 == null &&
+                  _imageFilePath2 == null &&
+                  _imageFilePath3 == null &&
+                  _imageFilePath4 == null)
+                  ? Text(
+                "please pick an image",
+                style: TextStyle(color: Colors.red),
+              )
+                  : SizedBox(),
+              SizedBox(height: 16),
+              TextFormField(
+                onChanged: _onTitleChange,
+                controller: _titleController,
+                validator: _validateTitle,
+                decoration: InputDecoration(
+                  counterText: _titleCount,
+                  filled: true,
+                  labelText: "Title",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                onChanged: _onDescriptionChange,
+                maxLines: 7,
+                minLines: 3,
+                controller: _descriptionController,
+                validator: _validateDescription,
+                decoration: InputDecoration(
+                  counterText: _descCount,
+                  filled: true,
+                  labelText: "Description",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              SizedBox(height: 16),
+              TextFormField(
+                controller: _sinceController,
+                validator: _validateSince,
+                keyboardType: TextInputType.numberWithOptions(),
+                decoration: InputDecoration(
+                  filled: true,
+                  labelText: "Since",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: ElevatedButton(
+                    onPressed: () => _onPostReport(context),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.add),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text("Add Treasure")
+                      ],
+                    )),
+              )
+            ],
+          ),
+        ));
+  }
+
+  Widget _buildMediaSelector() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Expanded(
+          child: InkWell(
+            onTap: () => _selectImage(1),
+            onDoubleTap: () => setState(() {
+              _imageFilePath1 = null;
+            }),
+            child: _imageFilePath1 != null
+                ? Image.file(
+              File(_imageFilePath1),
+              height: 100,
+            )
+                : Stack(
+              alignment: AlignmentDirectional.center,
+              children: [
+                Container(
+                  height: 100,
+                  color: Colors.green.shade100,
+                ),
+                Container(
+                  child: Icon(Icons.add_a_photo),
+                )
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 4,
+        ),
+        Expanded(
+          child: InkWell(
+            onTap: () => _selectImage(2),
+            onDoubleTap: () => setState(() {
+              _imageFilePath2 = null;
+            }),
+            child: _imageFilePath2 != null
+                ? Image.file(
+              File(_imageFilePath2),
+              height: 100,
+            )
+                : Stack(
+              alignment: AlignmentDirectional.center,
+              children: [
+                Container(
+                  height: 100,
+                  color: Colors.green.shade100,
+                ),
+                Container(
+                  child: Icon(Icons.add_a_photo),
+                )
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 4,
+        ),
+        Expanded(
+          child: InkWell(
+            onTap: () => _selectImage(3),
+            onDoubleTap: () => setState(() {
+              _imageFilePath3 = null;
+            }),
+            child: _imageFilePath3 != null
+                ? Image.file(
+              File(_imageFilePath3),
+              height: 100,
+            )
+                : Stack(
+              alignment: AlignmentDirectional.center,
+              children: [
+                Container(
+                  height: 100,
+                  color: Colors.green.shade100,
+                ),
+                Container(
+                  child: Icon(Icons.add_a_photo),
+                )
+              ],
+            ),
+          ),
+        ),
+        SizedBox(
+          width: 4,
+        ),
+        Expanded(
+          child: InkWell(
+            onTap: () => _selectImage(4),
+            onDoubleTap: () => setState(() {
+              _imageFilePath4 = null;
+            }),
+            child: _imageFilePath4 != null
+                ? Image.file(
+              File(_imageFilePath4),
+              height: 100,
+            )
+                : Stack(
+              alignment: AlignmentDirectional.center,
+              children: [
+                Container(
+                  height: 100,
+                  color: Colors.green.shade100,
+                ),
+                Container(
+                  child: Icon(Icons.add_a_photo),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
+
+  String _validateTitle(String title) {
+    if (title.isEmpty || title.trim().length <= 0) {
+      return "Enter some value";
+    }
+
+    if (title.length < 10) {
+      return "Title Text must be at min 10 character";
+    }
+
+    if (title.length > 30) {
+      return "Title Text must be at max 30 character";
+    }
+    return null;
+  }
+
+  void _onTitleChange(String text) {
+    setState(() {
+      _titleCount = "${text.length}/30";
+    });
+  }
+
+  String _validateSince(String price) {
+    if (price.isEmpty || price.trim().length <= 0) {
+      return "Enter some value";
+    }
+
+    try {
+      final p = double.parse(price);
+      if (p < -6000) return "Min since is 6000 b.c";
+      if (p > 2021) return "Max since is 2021 a.d";
+    } catch (e) {
+      return "Not supported age";
+    }
+    return null;
+  }
+
+  String _validateDescription(String desc) {
+    if (desc.isEmpty || desc.trim().length <= 0) {
+      return "Enter some value";
+    }
+
+    if (desc.length < 10) {
+      return "Description Text must be at min 10 character";
+    }
+
+    if (desc.length > 300) {
+      return "Description Text must be at max 300 character";
+    }
+    return null;
+  }
+
+  void _onDescriptionChange(String text) {
+    setState(() {
+      _descCount = "${text.length}/300";
+    });
+  }
+
+  void _selectImage(int index) async {
+    final pickedFile = await ImagePicker().getImage(
+        source: ImageSource.gallery,
+        maxHeight: 512,
+        maxWidth: 512,
+        imageQuality: 50);
+
+    if (pickedFile == null) {
+      return;
+    }
+
+    setState(() {
+      if (index == 1) _imageFilePath1 = pickedFile.path;
+      if (index == 2) _imageFilePath2 = pickedFile.path;
+      if (index == 3) _imageFilePath3 = pickedFile.path;
+      if (index == 4) _imageFilePath4 = pickedFile.path;
+    });
+  }
+
+  void _onPostReport(BuildContext context) async {
+    if (_formKey.currentState.validate() &&
+        (_imageFilePath1 != null ||
+            _imageFilePath2 != null ||
+            _imageFilePath3 != null ||
+            _imageFilePath4 != null)) {
+      try {
+        setState(() {
+          _isLoading = true;
+        });
+        final paths = <String>[];
+        if(_imageFilePath1!=null)
+          paths.add(_imageFilePath1);
+        if(_imageFilePath2!=null)
+          paths.add(_imageFilePath2);
+        if(_imageFilePath3!=null)
+          paths.add(_imageFilePath3);
+        if(_imageFilePath4!=null)
+          paths.add(_imageFilePath4);
+        await _treasureService.addNewTreasure(
+            title: _titleController.text,
+            desc: _descriptionController.text,
+            since: int.parse(_sinceController.text),
+            imagesPaths:paths);
+        Navigator.of(context).pop();
+      } catch (e) {} finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 }
+
