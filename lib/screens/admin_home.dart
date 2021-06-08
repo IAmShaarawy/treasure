@@ -13,7 +13,7 @@ class _AdminHomeState extends State<AdminHome> {
   final _items = <BottomNavigationBarItem>[
     BottomNavigationBarItem(
       icon: Icon(Icons.account_balance),
-      label: "Treasures",
+      label: "Monument",
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.reviews),

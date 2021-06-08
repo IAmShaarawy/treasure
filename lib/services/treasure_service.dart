@@ -17,7 +17,7 @@ class TreasureService {
   final _uploadService = UploadFileService();
   final _authService = AuthService();
 
-  Future<void> addNewTreasure({Category category,
+  Future<void> addNewTreasure({Categories category,
       String title,
       String desc,
       int since,
@@ -28,6 +28,7 @@ class TreasureService {
     final doc = _treasureCollection.doc();
     final treasure = TreasureModel(
         id: doc.id,
+        category: category,
         title: title,
         desc: desc,
         since: since,

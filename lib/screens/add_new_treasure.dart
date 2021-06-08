@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:treasure/models/categories.dart';
 import 'package:treasure/services/treasure_service.dart';
 import 'package:treasure/ui/loading.dart';
 
@@ -13,6 +14,7 @@ class AddNewTreasure extends StatefulWidget {
 }
 
 class _State extends State<AddNewTreasure> {
+  Categories _selectedCategory = Categories.values.first;
   String _titleCount = "";
   String _descCount = "";
   final _titleController = TextEditingController();
@@ -30,82 +32,115 @@ class _State extends State<AddNewTreasure> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Add New Product"),
+          title: Text("Add New Monument"),
           centerTitle: true,
         ),
         body: _isLoading
             ? Loading()
             : Form(
-          key: _formKey,
-          child: ListView(
-            padding: EdgeInsets.all(16),
-            children: [
-              SizedBox(height: 16),
-              _buildMediaSelector(),
-              (_imageFilePath1 == null &&
-                  _imageFilePath2 == null &&
-                  _imageFilePath3 == null &&
-                  _imageFilePath4 == null)
-                  ? Text(
-                "please pick an image",
-                style: TextStyle(color: Colors.red),
-              )
-                  : SizedBox(),
-              SizedBox(height: 16),
-              TextFormField(
-                onChanged: _onTitleChange,
-                controller: _titleController,
-                validator: _validateTitle,
-                decoration: InputDecoration(
-                  counterText: _titleCount,
-                  filled: true,
-                  labelText: "Title",
-                  border: OutlineInputBorder(),
+                key: _formKey,
+                child: ListView(
+                  padding: EdgeInsets.all(16),
+                  children: [
+                    SizedBox(height: 16),
+                    _buildCategorySelector(),
+                    SizedBox(height: 16),
+                    _buildMediaSelector(),
+                    (_imageFilePath1 == null &&
+                            _imageFilePath2 == null &&
+                            _imageFilePath3 == null &&
+                            _imageFilePath4 == null)
+                        ? Text(
+                            "please pick an image",
+                            style: TextStyle(color: Colors.red),
+                          )
+                        : SizedBox(),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      onChanged: _onTitleChange,
+                      controller: _titleController,
+                      validator: _validateTitle,
+                      decoration: InputDecoration(
+                        counterText: _titleCount,
+                        filled: true,
+                        labelText: "Title",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      onChanged: _onDescriptionChange,
+                      maxLines: 7,
+                      minLines: 3,
+                      controller: _descriptionController,
+                      validator: _validateDescription,
+                      decoration: InputDecoration(
+                        counterText: _descCount,
+                        filled: true,
+                        labelText: "Description",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    TextFormField(
+                      controller: _sinceController,
+                      validator: _validateSince,
+                      keyboardType: TextInputType.numberWithOptions(),
+                      decoration: InputDecoration(
+                        filled: true,
+                        labelText: "Since",
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: ElevatedButton(
+                          onPressed: () => _onPostReport(context),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.add),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text("Add Monument")
+                            ],
+                          )),
+                    )
+                  ],
+                ),
+              ));
+  }
+
+  Widget _buildCategorySelector() {
+    return Container(
+      height: 64,
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: Categories.values.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder:(context,index){
+          final category =  Categories.values[index];
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ChoiceChip(
+              avatar: CircleAvatar(
+                backgroundImage: NetworkImage(
+                  categoryImage(category),
                 ),
               ),
-              SizedBox(height: 16),
-              TextFormField(
-                onChanged: _onDescriptionChange,
-                maxLines: 7,
-                minLines: 3,
-                controller: _descriptionController,
-                validator: _validateDescription,
-                decoration: InputDecoration(
-                  counterText: _descCount,
-                  filled: true,
-                  labelText: "Description",
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _sinceController,
-                validator: _validateSince,
-                keyboardType: TextInputType.numberWithOptions(),
-                decoration: InputDecoration(
-                  filled: true,
-                  labelText: "Since",
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: ElevatedButton(
-                    onPressed: () => _onPostReport(context),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.add),
-                        SizedBox(
-                          width: 8,
-                        ),
-                        Text("Add Treasure")
-                      ],
-                    )),
-              )
-            ],
-          ),
-        ));
+              label: Text(categoryLabel(category)),
+              selected: _selectedCategory == category,
+              onSelected: (isSelected) {
+                setState(() {
+                  _selectedCategory = category;
+                });
+              },
+            ),
+          );
+        },
+      ),
+    );
   }
 
   Widget _buildMediaSelector() {
@@ -120,21 +155,21 @@ class _State extends State<AddNewTreasure> {
             }),
             child: _imageFilePath1 != null
                 ? Image.file(
-              File(_imageFilePath1),
-              height: 100,
-            )
+                    File(_imageFilePath1),
+                    height: 100,
+                  )
                 : Stack(
-              alignment: AlignmentDirectional.center,
-              children: [
-                Container(
-                  height: 100,
-                  color: Colors.green.shade100,
-                ),
-                Container(
-                  child: Icon(Icons.add_a_photo),
-                )
-              ],
-            ),
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      Container(
+                        height: 100,
+                        color: Colors.green.shade100,
+                      ),
+                      Container(
+                        child: Icon(Icons.add_a_photo),
+                      )
+                    ],
+                  ),
           ),
         ),
         SizedBox(
@@ -148,21 +183,21 @@ class _State extends State<AddNewTreasure> {
             }),
             child: _imageFilePath2 != null
                 ? Image.file(
-              File(_imageFilePath2),
-              height: 100,
-            )
+                    File(_imageFilePath2),
+                    height: 100,
+                  )
                 : Stack(
-              alignment: AlignmentDirectional.center,
-              children: [
-                Container(
-                  height: 100,
-                  color: Colors.green.shade100,
-                ),
-                Container(
-                  child: Icon(Icons.add_a_photo),
-                )
-              ],
-            ),
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      Container(
+                        height: 100,
+                        color: Colors.green.shade100,
+                      ),
+                      Container(
+                        child: Icon(Icons.add_a_photo),
+                      )
+                    ],
+                  ),
           ),
         ),
         SizedBox(
@@ -176,21 +211,21 @@ class _State extends State<AddNewTreasure> {
             }),
             child: _imageFilePath3 != null
                 ? Image.file(
-              File(_imageFilePath3),
-              height: 100,
-            )
+                    File(_imageFilePath3),
+                    height: 100,
+                  )
                 : Stack(
-              alignment: AlignmentDirectional.center,
-              children: [
-                Container(
-                  height: 100,
-                  color: Colors.green.shade100,
-                ),
-                Container(
-                  child: Icon(Icons.add_a_photo),
-                )
-              ],
-            ),
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      Container(
+                        height: 100,
+                        color: Colors.green.shade100,
+                      ),
+                      Container(
+                        child: Icon(Icons.add_a_photo),
+                      )
+                    ],
+                  ),
           ),
         ),
         SizedBox(
@@ -204,21 +239,21 @@ class _State extends State<AddNewTreasure> {
             }),
             child: _imageFilePath4 != null
                 ? Image.file(
-              File(_imageFilePath4),
-              height: 100,
-            )
+                    File(_imageFilePath4),
+                    height: 100,
+                  )
                 : Stack(
-              alignment: AlignmentDirectional.center,
-              children: [
-                Container(
-                  height: 100,
-                  color: Colors.green.shade100,
-                ),
-                Container(
-                  child: Icon(Icons.add_a_photo),
-                )
-              ],
-            ),
+                    alignment: AlignmentDirectional.center,
+                    children: [
+                      Container(
+                        height: 100,
+                        color: Colors.green.shade100,
+                      ),
+                      Container(
+                        child: Icon(Icons.add_a_photo),
+                      )
+                    ],
+                  ),
           ),
         ),
       ],
@@ -312,19 +347,16 @@ class _State extends State<AddNewTreasure> {
           _isLoading = true;
         });
         final paths = <String>[];
-        if(_imageFilePath1!=null)
-          paths.add(_imageFilePath1);
-        if(_imageFilePath2!=null)
-          paths.add(_imageFilePath2);
-        if(_imageFilePath3!=null)
-          paths.add(_imageFilePath3);
-        if(_imageFilePath4!=null)
-          paths.add(_imageFilePath4);
+        if (_imageFilePath1 != null) paths.add(_imageFilePath1);
+        if (_imageFilePath2 != null) paths.add(_imageFilePath2);
+        if (_imageFilePath3 != null) paths.add(_imageFilePath3);
+        if (_imageFilePath4 != null) paths.add(_imageFilePath4);
         await _treasureService.addNewTreasure(
+            category: _selectedCategory,
             title: _titleController.text,
             desc: _descriptionController.text,
             since: int.parse(_sinceController.text),
-            imagesPaths:paths);
+            imagesPaths: paths);
         Navigator.of(context).pop();
       } catch (e) {} finally {
         setState(() {
@@ -334,4 +366,3 @@ class _State extends State<AddNewTreasure> {
     }
   }
 }
-

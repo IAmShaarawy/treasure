@@ -6,11 +6,11 @@ class Treasures extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Treasures"),
+        title: Text("Monuments"),
         centerTitle: true,
       ),
       body: Center(
-        child: Text("Treasures"),
+        child: Text("Monuments"),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
