@@ -10,20 +10,22 @@ class TreasureService {
   final _treasureCollection = FirebaseFirestore.instance
       .collection("treasures")
       .withConverter<TreasureModel>(
-    fromFirestore: TreasureModel.from,
-    toFirestore: TreasureModel.toMap,
-  );
+        fromFirestore: TreasureModel.from,
+        toFirestore: TreasureModel.toMap,
+      );
 
   final _uploadService = UploadFileService();
   final _authService = AuthService();
 
-  Future<void> addNewTreasure({Categories category,
-      String title,
-      String desc,
-      int since,
-      List<String> imagesPaths,}) async {
-    final urls = await Future.wait(
-        imagesPaths.map((imgPath) => _uploadService.uploadTreasureImage(imgPath)));
+  Future<void> addNewTreasure({
+    Categories category,
+    String title,
+    String desc,
+    int since,
+    List<String> imagesPaths,
+  }) async {
+    final urls = await Future.wait(imagesPaths
+        .map((imgPath) => _uploadService.uploadTreasureImage(imgPath)));
     final currentUser = await _authService.getCurrentUser();
     final doc = _treasureCollection.doc();
     final treasure = TreasureModel(
@@ -64,15 +66,18 @@ class TreasureService {
     return _getTreasuresStream(false, category);
   }
 
-  Stream<List<TreasureModel>> _getTreasuresStream(bool isReviewed,
-      Categories category) {
-    Query<TreasureModel> query = _treasureCollection
-        .where("is_reviewed", isEqualTo: isReviewed);
+  Stream<List<TreasureModel>> _getTreasuresStream(
+      bool isReviewed, Categories category) {
+    Query<TreasureModel> query =
+        _treasureCollection.where("is_reviewed", isEqualTo: isReviewed);
     if (category != null) {
       query = query.where("category", isEqualTo: category.toString());
     }
-    return query.snapshots()
-        .map((qs) => qs.docs.map((ds) => ds.data()));
+    return query.snapshots().map((qs) {
+      return qs.docs.map((doc) {
+        return doc.data();
+      }).toList();
+    });
   }
 
   Future<void> setTreasureSeenByCurrentUser(String treasureId) async {

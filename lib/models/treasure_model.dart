@@ -63,8 +63,8 @@ class TreasureModel {
       title: doc.get("title"),
       desc: doc.get("desc"),
       since: doc.get("since"),
-      imagesURLS: doc.get("images_urls"),
-      viewersIds: doc.get("viewers_ids"),
+      imagesURLS: (doc.get("images_urls")as List).cast<String>(),
+      viewersIds: (doc.get("viewers_ids") as List).cast<String>(),
       isReviewed: doc.get("is_reviewed"),
     );
   }
