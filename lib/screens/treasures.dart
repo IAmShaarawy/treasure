@@ -75,15 +75,16 @@ class _TreasuresState extends State<Treasures> {
 
   Widget _buildTreasuresList(Categories category) {
     return StreamBuilder<List<TreasureModel>>(
-        stream: widget.treasuresService.getReviewedTreasuresStream(category),
+        stream: widget.treasuresService.getReviewedTreasuresStream(null),
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Loading();
           final treasures = snapshot.data;
           if (treasures.isEmpty) return Text("Empty!!!");
           return ListView.builder(
+              padding: EdgeInsets.only(bottom: 84),
               itemCount: treasures.length,
               itemBuilder: (context, index) {
-                return TreasureItem(treasures[index]);
+                return TreasureItem(treasures[index], false);
               });
         });
   }

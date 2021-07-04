@@ -4,13 +4,14 @@ import 'package:treasure/services/treasure_service.dart';
 import 'package:treasure/ui/loading.dart';
 
 class TreasureDetails extends StatelessWidget {
-  final treasureService = TreasureService();
+  final TreasureModel model;
+
+  TreasureDetails(this.model);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold();
   }
 
-  void onPressButton() async {
-
-  }
+  void onPressButton() async {}
 }

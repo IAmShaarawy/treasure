@@ -21,6 +21,11 @@ class TreasureModel {
       this.viewersIds,
       this.isReviewed});
 
+  String sinceFormatted(){
+    final trailing = since>=0?"AD":"BC";
+      return "${since.abs()} $trailing";
+  }
+
   TreasureModel copy({
     String id,
     Categories category,
