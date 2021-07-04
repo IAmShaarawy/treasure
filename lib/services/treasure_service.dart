@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:treasure/models/categories.dart';
 import 'package:treasure/models/roles.dart';
 import 'package:treasure/models/treasure_model.dart';
@@ -49,10 +48,6 @@ class TreasureService {
     return _treasureCollection.doc(id).snapshots().map((ds) => ds.data());
   }
 
-  Future<void> editTreasure(TreasureModel treasure) async {
-    await _treasureCollection.doc(treasure.id).set(treasure);
-  }
-
   Future<void> deleteTreasure(String treasureId) async {
     await _treasureCollection.doc(treasureId).delete();
   }
@@ -85,11 +80,10 @@ class TreasureService {
     final currentUser = await _authService.getCurrentUser();
     if (treasure.viewersIds.contains(currentUser.id)) return;
     treasure.viewersIds.add(currentUser.id);
-    await editTreasure(treasure);
+    // await editTreasure(treasure);
   }
 
   Future<void> setTreasureReviewed(String treasureId) async {
-    final treasure = await getTreasureWithId(treasureId);
-    await editTreasure(treasure.copy(isReviewed: true));
+    await _treasureCollection.doc(treasureId).update({"is_reviewed": true});
   }
 }

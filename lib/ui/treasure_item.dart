@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:treasure/models/categories.dart';
 import 'package:treasure/models/treasure_model.dart';
 import 'package:treasure/services/treasure_service.dart';
 
@@ -44,15 +45,24 @@ class TreasureItem extends StatelessWidget {
                     ),
                   ],
                 ),
-                Row(
-                  children: [
-                    Icon(Icons.remove_red_eye),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(model.viewersIds.length.toString()),
-                    ),
-                  ],
-                ),
+                isWithAdminControllers
+                    ? RawChip(
+                        avatar: CircleAvatar(
+                          backgroundImage: NetworkImage(
+                            categoryImage(model.category),
+                          ),
+                        ),
+                        label: Text(categoryLabel(model.category)),
+                      )
+                    : Row(
+                        children: [
+                          Icon(Icons.remove_red_eye),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(model.viewersIds.length.toString()),
+                          ),
+                        ],
+                      ),
               ],
             ),
           ),

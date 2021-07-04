@@ -23,12 +23,10 @@ class _TreasuresState extends State<Treasures> {
         title: Text("Monuments"),
         centerTitle: true,
       ),
-      body: Column(
+      body: Stack(
         children: [
+          Center(child: _buildTreasuresList(_selectedCategory)),
           _buildCategorySelector(),
-          Expanded(
-            child: Center(child: _buildTreasuresList(_selectedCategory)),
-          )
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -44,6 +42,7 @@ class _TreasuresState extends State<Treasures> {
 
   Widget _buildCategorySelector() {
     return Container(
+      color: Colors.amber.shade300.withAlpha(80),
       height: 64,
       child: ListView.builder(
         shrinkWrap: true,
@@ -81,7 +80,7 @@ class _TreasuresState extends State<Treasures> {
           final treasures = snapshot.data;
           if (treasures.isEmpty) return Text("Empty!!!");
           return ListView.builder(
-              padding: EdgeInsets.only(bottom: 84),
+              padding: EdgeInsets.only(bottom: 84, top: 64, left: 4, right: 4),
               itemCount: treasures.length,
               itemBuilder: (context, index) {
                 return TreasureItem(treasures[index], false);
