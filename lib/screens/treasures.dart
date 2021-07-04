@@ -20,8 +20,9 @@ class _TreasuresState extends State<Treasures> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Monuments"),
+        title: Text("Home"),
         centerTitle: true,
+        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.search))],
       ),
       body: Stack(
         children: [

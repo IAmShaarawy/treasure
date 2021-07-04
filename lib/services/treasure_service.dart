@@ -80,7 +80,9 @@ class TreasureService {
     final currentUser = await _authService.getCurrentUser();
     if (treasure.viewersIds.contains(currentUser.id)) return;
     treasure.viewersIds.add(currentUser.id);
-    // await editTreasure(treasure);
+    await _treasureCollection
+        .doc(treasureId)
+        .update({"viewers_ids": treasure.viewersIds});
   }
 
   Future<void> setTreasureReviewed(String treasureId) async {

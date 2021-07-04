@@ -5,15 +5,12 @@ import 'package:treasure/screens/add_new_treasure.dart';
 import 'package:treasure/screens/admin_home.dart';
 import 'package:treasure/screens/auth.dart';
 import 'package:treasure/screens/splash.dart';
+import 'package:treasure/screens/treasure_details.dart';
 import 'package:treasure/screens/user_home.dart';
 import 'package:treasure/services/auth_service.dart';
 import 'package:rxdart/rxdart.dart';
 
 class App extends StatelessWidget {
-  final Map<String, WidgetBuilder> routes = {
-    AddNewTreasure.ROUTE: (ctx) => AddNewTreasure(),
-  };
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,7 +18,17 @@ class App extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.amber,
       ),
-      routes: routes,
+      onGenerateRoute: (RouteSettings settings) {
+        print('build route for ${settings.name}');
+        var routes = <String, WidgetBuilder>{
+          AddNewTreasure.ROUTE: (ctx) => AddNewTreasure(),
+          TreasureDetails.ROUTE: (ctx) => TreasureDetails(
+                settings.arguments,
+              ),
+        };
+        WidgetBuilder builder = routes[settings.name];
+        return MaterialPageRoute(builder: (ctx) => builder(ctx));
+      },
       home: StreamBuilder<Widget>(
         initialData: Splash(),
         stream: findHome(),
