@@ -95,7 +95,7 @@ class TreasureDetails extends StatelessWidget {
               borderRadius: BorderRadius.circular(24.0),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 24),
               child: Text(
                 model.desc,
                 textAlign: TextAlign.center,
