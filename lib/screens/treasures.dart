@@ -75,7 +75,7 @@ class _TreasuresState extends State<Treasures> {
 
   Widget _buildTreasuresList(Categories category) {
     return StreamBuilder<List<TreasureModel>>(
-        stream: widget.treasuresService.getReviewedTreasuresStream(null),
+        stream: widget.treasuresService.getReviewedTreasuresStream(category),
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Loading();
           final treasures = snapshot.data;

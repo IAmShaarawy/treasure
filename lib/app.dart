@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:treasure/models/roles.dart';
+import 'package:treasure/screens/MapSelector.dart';
 import 'package:treasure/screens/add_new_treasure.dart';
 import 'package:treasure/screens/admin_home.dart';
 import 'package:treasure/screens/auth.dart';
@@ -14,6 +15,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         primarySwatch: Colors.amber,
@@ -25,6 +27,7 @@ class App extends StatelessWidget {
           TreasureDetails.ROUTE: (ctx) => TreasureDetails(
                 settings.arguments,
               ),
+          MapSelector.ROUTE: (ctx) => MapSelector(settings.arguments)
         };
         WidgetBuilder builder = routes[settings.name];
         return MaterialPageRoute(builder: (ctx) => builder(ctx));

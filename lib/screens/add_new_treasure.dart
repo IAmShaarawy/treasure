@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:treasure/models/categories.dart';
+import 'package:treasure/screens/MapSelector.dart';
 import 'package:treasure/services/treasure_service.dart';
 import 'package:treasure/ui/loading.dart';
 
@@ -26,6 +28,7 @@ class _State extends State<AddNewTreasure> {
   String _imageFilePath3;
   String _imageFilePath4;
   bool _isLoading = false;
+  LatLng pickedLocation;
   final _treasureService = TreasureService();
 
   @override
@@ -93,6 +96,22 @@ class _State extends State<AddNewTreasure> {
                       ),
                     ),
                     Padding(
+                      padding:
+                          const EdgeInsets.only(left: 16, right: 16, top: 16),
+                      child: ElevatedButton(
+                          onPressed: () => _pickLocation(context),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.location_on_outlined),
+                              SizedBox(
+                                width: 8,
+                              ),
+                              Text("Pick location")
+                            ],
+                          )),
+                    ),
+                    Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: ElevatedButton(
                           onPressed: () => _onPostReport(context),
@@ -119,8 +138,8 @@ class _State extends State<AddNewTreasure> {
         shrinkWrap: true,
         itemCount: Categories.values.length,
         scrollDirection: Axis.horizontal,
-        itemBuilder:(context,index){
-          final category =  Categories.values[index];
+        itemBuilder: (context, index) {
+          final category = Categories.values[index];
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: ChoiceChip(
@@ -333,6 +352,14 @@ class _State extends State<AddNewTreasure> {
       if (index == 2) _imageFilePath2 = pickedFile.path;
       if (index == 3) _imageFilePath3 = pickedFile.path;
       if (index == 4) _imageFilePath4 = pickedFile.path;
+    });
+  }
+
+  void _pickLocation(BuildContext context) async {
+    final result =
+        (await Navigator.of(context).pushNamed(MapSelector.ROUTE,arguments: pickedLocation)) as LatLng;
+    setState(() {
+      pickedLocation = result;
     });
   }
 
