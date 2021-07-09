@@ -95,6 +95,31 @@ class _State extends State<AddNewTreasure> {
                         border: OutlineInputBorder(),
                       ),
                     ),
+                    pickedLocation == null
+                        ? SizedBox()
+                        : Container(
+                            padding: EdgeInsets.only(top: 16),
+                            height: 150,
+                            child: Card(
+                              clipBehavior: Clip.hardEdge,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(24.0),
+                              ),
+                              child: GoogleMap(
+                                markers: {
+                                  Marker(
+                                      markerId: MarkerId("my_marker"),
+                                      position: pickedLocation)
+                                },
+                                liteModeEnabled: true,
+                                compassEnabled: true,
+                                initialCameraPosition: CameraPosition(
+                                  target: pickedLocation,
+                                  zoom: 15,
+                                ),
+                              ),
+                            ),
+                          ),
                     Padding(
                       padding:
                           const EdgeInsets.only(left: 16, right: 16, top: 16),
@@ -107,7 +132,7 @@ class _State extends State<AddNewTreasure> {
                               SizedBox(
                                 width: 8,
                               ),
-                              Text("Pick location")
+                              Text("${pickedLocation==null?"Pick":"Change"} location")
                             ],
                           )),
                     ),
@@ -356,8 +381,8 @@ class _State extends State<AddNewTreasure> {
   }
 
   void _pickLocation(BuildContext context) async {
-    final result =
-        (await Navigator.of(context).pushNamed(MapSelector.ROUTE,arguments: pickedLocation)) as LatLng;
+    final result = (await Navigator.of(context)
+        .pushNamed(MapSelector.ROUTE, arguments: pickedLocation)) as LatLng;
     setState(() {
       pickedLocation = result;
     });
