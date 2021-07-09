@@ -132,7 +132,8 @@ class _State extends State<AddNewTreasure> {
                               SizedBox(
                                 width: 8,
                               ),
-                              Text("${pickedLocation==null?"Pick":"Change"} location")
+                              Text(
+                                  "${pickedLocation == null ? "Pick" : "Change"} location")
                             ],
                           )),
                     ),
@@ -408,7 +409,8 @@ class _State extends State<AddNewTreasure> {
             title: _titleController.text,
             desc: _descriptionController.text,
             since: int.parse(_sinceController.text),
-            imagesPaths: paths);
+            imagesPaths: paths,
+            location: pickedLocation);
         Navigator.of(context).pop();
       } catch (e) {} finally {
         setState(() {

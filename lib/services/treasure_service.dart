@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:treasure/models/categories.dart';
 import 'package:treasure/models/roles.dart';
 import 'package:treasure/models/treasure_model.dart';
@@ -22,6 +23,7 @@ class TreasureService {
     String desc,
     int since,
     List<String> imagesPaths,
+    LatLng location,
   }) async {
     final urls = await Future.wait(imagesPaths
         .map((imgPath) => _uploadService.uploadTreasureImage(imgPath)));
@@ -35,7 +37,8 @@ class TreasureService {
         since: since,
         imagesURLS: urls,
         viewersIds: [],
-        isReviewed: currentUser.role == Roles.ADMIN);
+        isReviewed: currentUser.role == Roles.ADMIN,
+        location: location);
     await doc.set(treasure);
   }
 

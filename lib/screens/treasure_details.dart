@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:treasure/models/categories.dart';
 import 'package:treasure/models/treasure_model.dart';
 import 'package:treasure/services/treasure_service.dart';
@@ -61,12 +62,46 @@ class TreasureDetails extends StatelessWidget {
             ),
           ],
         ),
+        model.location == null
+            ? SizedBox()
+            : Container(
+          padding: EdgeInsets.only(top: 16,left: 16,right: 16),
+          height: 150,
+          child: Card(
+            clipBehavior: Clip.hardEdge,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24.0),
+            ),
+            child: GoogleMap(
+              markers: {
+                Marker(
+                    markerId: MarkerId("my_marker"),
+                    position: model.location)
+              },
+              liteModeEnabled: true,
+              compassEnabled: true,
+              initialCameraPosition: CameraPosition(
+                target: model.location,
+                zoom: 15,
+              ),
+            ),
+          ),
+        ),
         Padding(
-          padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-          child: Text(
-            model.desc,
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.bodyText2,
+          padding: const EdgeInsets.all(16.0),
+          child: Card(
+            clipBehavior: Clip.hardEdge,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(24.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+              child: Text(
+                model.desc,
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodyText2,
+              ),
+            ),
           ),
         ),
       ]),
