@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:treasure/models/treasure_model.dart';
 import 'package:treasure/services/treasure_service.dart';
@@ -26,7 +27,33 @@ class AdminReview extends StatelessWidget {
         builder: (context, snapshot) {
           if (!snapshot.hasData) return Loading();
           final treasures = snapshot.data;
-          if (treasures.isEmpty) return Text("No Reviews !!!");
+          if (treasures.isEmpty) return SizedBox(
+            width: 250.0,
+            child: Center(
+              child: DefaultTextStyle(
+                style: const TextStyle(
+                  fontSize: 35,
+                  color: Colors.amber,
+                  shadows: [
+                    Shadow(
+                      blurRadius: 7.0,
+                      color: Colors.amber,
+                      offset: Offset(0, 0),
+                    ),
+                  ],
+                ),
+                child: AnimatedTextKit(
+                  repeatForever: true,
+                  animatedTexts: [
+                    FlickerAnimatedText('NO REVIEWS'),
+                  ],
+                  onTap: () {
+                    print("Tap Event");
+                  },
+                ),
+              ),
+            ),
+          );
           return ListView.builder(
               padding: EdgeInsets.all(4),
               itemCount: treasures.length,

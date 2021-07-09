@@ -32,6 +32,7 @@ dependencies:
   image_picker: ^0.7.5+2
   carousel_slider: ^4.0.0
   google_maps_flutter: ^2.0.6
+  animated_text_kit: ^4.2.1
 
 
   # The following adds the Cupertino Icons font to your application.
